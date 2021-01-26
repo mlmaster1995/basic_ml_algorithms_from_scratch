@@ -1,6 +1,7 @@
 import data_process as dp
 from SVM import SVM_Kernel, SVM_Linear
 
+# load data
 data_raw, data_index = dp.load_data('heart_disease_data.csv')
 data_rf = data_raw.iloc[:, 0:-1].values.tolist()
 data_rf_target = data_raw.iloc[:, -1].values.tolist()

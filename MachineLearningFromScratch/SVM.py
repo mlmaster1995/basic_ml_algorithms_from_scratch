@@ -34,7 +34,7 @@ class SVM_Kernel:
                 continue
         return dataset_target
 
-    ## generate random weight w0,w1,w2,w3.....
+    # generate random weight w0,w1,w2,w3.....
     def generate_weight(self, num_attr, seed=2):
         random.seed(seed)
         wt_array = []
@@ -55,12 +55,12 @@ class SVM_Kernel:
         prob = np.exp(-(np.linalg.norm(abs(x_ipt - lama_single))) ** 2 / (2 * sigma ** 2))
         return prob
 
-    ## polynomial_kernel func
+    # polynomial_kernel func
     def __poly_kernel(self, x_ipt, lama_single, degree=2, bias=0):
         poly_val = (np.dot(x_ipt, lama_single) + bias) ** degree
         return poly_val
 
-    ## generate poly features
+    # generate poly features
     def __poly_feature_make(self, dt_train, lama, degree=2, bias=0):
         feature = []
         for val in dt_train:
@@ -187,7 +187,7 @@ class SVM_Linear:
                 continue
         return dataset_target
 
-    ## generate random weight w0,w1,w2,w3.....
+    # generate random weight w0,w1,w2,w3.....
     def __generate_weight(self, num_attr, seed=2):
         random.seed(seed)
         wt_array = []
