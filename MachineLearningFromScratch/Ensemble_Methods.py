@@ -1,3 +1,7 @@
+
+# Created By Chris Young in 2019
+# Harding Volting and Adaboost are developed
+# soft_voting, stacking, bagging, gradient boost not finished yet
 from copy import deepcopy
 from Decision_Regression_Forest import RandomForest
 from KNN import KNN
@@ -15,32 +19,32 @@ class EnsembleLearner:
     def __init__(self, dataset, dataset_target):
         self.dataset = deepcopy(dataset)
         self.dataset_target = deepcopy(dataset_target)
-
         # hard volting parameters
         self.__algorithm_lst = None
-
         # adaboost parameters
         self.number_estimator = None
         self.boost_model = None
         self.predict_list = None
         self.estimator_limit = 2000
 
-    def soft_volting(self):
+    # ??
+    def soft_voting(self):
         pass
 
+    # ??
     def stacking(self):
         pass
 
-    # same as random forests but for other algorithm
+    # similar as the random forest
     def bagging(self):
         pass
 
-    # use sklearn and see the 'ensemble_regression_debug'
+    # ??
     def gradientBoost(self):
         pass
 
     # hard volting predict func
-    def hard_volting_predict(self, single_dataset, *argv):
+    def hard_voting_predict(self, single_dataset, *argv):
         res_lst = []
         single_dataset = deepcopy(single_dataset)
         self.__algorithm_lst = argv
@@ -54,7 +58,7 @@ class EnsembleLearner:
         return res
 
     # hard volting score func
-    def hard_volting_score(self, datatest, datatest_target, *argv):
+    def hard_voting_score(self, datatest, datatest_target, *argv):
         self.__algorithm_lst = argv
         datatest = deepcopy(datatest)
         datatest_target = deepcopy(datatest_target)
@@ -69,7 +73,6 @@ class EnsembleLearner:
                 res_tupile.append((res, datatest_target[index]))
         else:
             raise NotImplementedError('Unknown algorithm...')
-
         res_final = list(map(lambda x: 1 if x[0]==x[1] else 0, res_tupile))
         error = res_final.count(0)/len(res_tupile)
         score = 1-error
@@ -102,13 +105,11 @@ class EnsembleLearner:
         boost_model = []
         predictor_weight_list = []
         estimator_count = 0
-
         # traning model
         estimator_limit = self.estimator_limit if estimator_limit is None else estimator_limit
         while estimator_count < estimator_limit:
             # initial estimator parameters
             estimator_count += 1
-
             # fill up the model training & testing data
             if estimator_count == 1:
                 estimator_data = self.dataset
@@ -144,7 +145,7 @@ class EnsembleLearner:
             error = sum(np.multiply(instance_weight_rate_list, terror_lst).tolist()) / sum(instance_weight_rate_list)
 
             # calc predictor weight
-            if error < 1 and error > 0:
+            if 1 > error > 0:
                 predictor_weight_list.append(learning_rate * math.log((1 - error) / error))
             elif error == 0:
                 predictor_weight_list.append(max(predictor_weight_list)+0.5 if len(predictor_weight_list) > 0 else 10)
@@ -225,7 +226,7 @@ class EnsembleLearner:
             new_sample.append(deepcopy(data[index]))
             new_sample_target.append(deepcopy(data_target[index]))
 
-        return (new_sample, new_sample_target)
+        return new_sample, new_sample_target
 
 
 

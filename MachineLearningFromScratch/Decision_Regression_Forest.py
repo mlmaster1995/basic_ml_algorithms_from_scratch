@@ -17,7 +17,6 @@ class RandomForest:
         if isinstance(forestlst, list) and isinstance(treefeatures, list):
             self.__forestlist = forestlst
             self.__treefeatures = treefeatures
-
         else:
             raise NotImplementedError('Wrong Forest List')
 
@@ -32,8 +31,6 @@ class RandomForest:
 
     def classify(self, single_dataset, single_dataset_target):
         res_lst = []
-        error = 0
-
         # test trees
         for tree_index in range(len(self.__forestlist)):
             sample_features = self.__treefeatures[tree_index]
@@ -47,7 +44,6 @@ class RandomForest:
     def classify_ensemble(self, single_dataset):
         single_dataset = deepcopy(single_dataset)
         res_lst = []
-
         for tree_index in range(len(self.__forestlist)):
             sample_features = self.__treefeatures[tree_index]
             single_test_dataset = list(map(lambda x: single_dataset[x], sample_features))
@@ -58,7 +54,6 @@ class RandomForest:
         return res
 
     def score(self, dataset, dataset_target, parallel=False):
-
         if not parallel:
             res_lst = []
             for single_data, target in zip(dataset, dataset_target):
@@ -76,7 +71,7 @@ class RandomForest:
 
         return accuracy
 
-    ### random forest build
+    # random forest build
     # random patches: sampling both training instances and features -> sample columns & rows
     # random subspaces: sampling features of all training instances -> sample columns
     # patches_ratio: to sample ratio percentage of dataset randomly
@@ -260,7 +255,7 @@ class RegressionForest:
         error = sum(error_lst) / len(error_lst)
         return error
 
-    ### random forest build
+    # random forest build
     # random patches: sampling both training instances and features -> sample columns & rows
     # random subspaces: sampling features of all training instances -> sample columns
     # patches_ratio: to sample ratio percentage of dataset randomly

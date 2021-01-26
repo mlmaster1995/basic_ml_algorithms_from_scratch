@@ -26,7 +26,7 @@ class DecisionTree:
         node_data = tree_node.data
         if node_data['type'] == 'leaf node':
             return node_data['class']
-        elif (node_data['type'] == 'root node' and ('feature' not in node_data)):
+        elif node_data['type'] == 'root node' and ('feature' not in node_data):
             return node_data['class']
         else:
             if single_input_data[node_data['feature']] <= node_data['<']:
@@ -40,7 +40,7 @@ class DecisionTree:
     def test(self, single_input_data, target):
         root_node = self.get_tree_root()
         res = self.__test_node(root_node, single_input_data)
-        return (res, target)
+        return res, target
 
     def test_notarget(self, single_input_data):
         root_node = self.get_tree_root()
@@ -107,8 +107,8 @@ class DecisionTree:
             data_merge.append(res[0] + [res[1]])
         return data_merge
 
-    ## split_the dataset repeatedly in a recursion and a left node & right node
-    ## with all child nodes connected
+    # split_the dataset repeatedly in a recursion and a left node & right node
+    # with all child nodes connected
     def __split_recursion(self, data_set, multiclass, max_depth=None, split_info=None):
         if max_depth is not None and max_depth <= 0:
             raise NotImplementedError('Tree Depth <=0')
@@ -155,7 +155,7 @@ class DecisionTree:
                 mother_node.set_left(child_left_node)
                 mother_node.set_right(child_right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
             else:
                 mother_node_data = {
@@ -195,12 +195,12 @@ class DecisionTree:
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
         # left branch cannot be split but right branch can
         elif type(left_set) is str and type(right_set) is not str:
             if (max_depth is not None and max_depth - 1 > 0) or max_depth is None:
-                max_depth = max_depth - 1 if max_depth != None else None
+                max_depth = max_depth - 1 if max_depth is not None else None
                 res = self.__split_recursion(right_set, multiclass, max_depth, split_info)
                 if len(res) > 0:
                     child_right_node = res[0]
@@ -234,7 +234,7 @@ class DecisionTree:
                     mother_node.set_left(child_left_node)
                     mother_node.set_right(child_right_node)
 
-                    return (mother_node, split_info)
+                    return mother_node, split_info
 
             else:
                 mother_node_data = {
@@ -274,7 +274,7 @@ class DecisionTree:
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
         # both branches can be split
         elif type(left_set) is not str and type(right_set) is not str:
@@ -308,7 +308,7 @@ class DecisionTree:
                 mother_node.set_left(left_child_node)
                 mother_node.set_right(right_child_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
             else:
                 mother_node_data = {
@@ -348,7 +348,7 @@ class DecisionTree:
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
         # both branches cannot be split
         elif type(left_set) is str and type(right_set) is str:
@@ -362,7 +362,7 @@ class DecisionTree:
                 }
                 self.leaf_node_count += 1
                 leaf_node = TreeNode(leaf_node_data)
-                return (leaf_node, split_info)
+                return leaf_node, split_info
 
             elif split_info['type'] == 'non-leaf node':
                 mother_node_data = {
@@ -402,7 +402,7 @@ class DecisionTree:
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
     # calculate gini of all features of dataset to get the split feature info
     # data_set must have data & target
@@ -613,7 +613,7 @@ class RegressionTree:
         node_data = tree_node.data
         if node_data['type'] == 'leaf node':
             return node_data['class']
-        elif (node_data['type'] == 'root node' and ('feature' not in node_data)):
+        elif node_data['type'] == 'root node' and ('feature' not in node_data):
             return node_data['class']
         else:
             if single_input_data[node_data['feature']] <= node_data['<']:
@@ -627,7 +627,7 @@ class RegressionTree:
     def test_target(self, single_input_data, target):
         root_node = self.get_tree_root()
         res = self.__test_node(root_node, single_input_data)
-        return (res, target)
+        return res, target
 
     def test(self, single_input_data):
         root_node = self.get_tree_root()
@@ -735,7 +735,7 @@ class RegressionTree:
                 child_right_node = TreeNode(child_right_node_data)
                 mother_node.set_left(child_left_node)
                 mother_node.set_right(child_right_node)
-                return (mother_node, split_info)
+                return mother_node, split_info
             # max_depth limit is reached
             else:
                 # mother node data
@@ -773,12 +773,12 @@ class RegressionTree:
                 right_node = TreeNode(right_node_data)
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
-                return (mother_node, split_info)
+                return mother_node, split_info
 
         # left branch cannot be split but right branch can
         elif type(left_set) is str and type(right_set) is not str:
             if (max_depth is not None and max_depth - 1 > 0) or max_depth is None:
-                max_depth = max_depth - 1 if max_depth != None else None
+                max_depth = max_depth - 1 if max_depth is not None else None
                 res = self.__split_recursion(right_set, max_depth, max_estimator, split_info)
                 if len(res) > 0:
                     child_right_node = res[0]
@@ -806,7 +806,7 @@ class RegressionTree:
                     child_left_node = TreeNode(child_left_node_data)
                     mother_node.set_left(child_left_node)
                     mother_node.set_right(child_right_node)
-                    return (mother_node, split_info)
+                    return mother_node, split_info
             else:
                 mother_node_data = {
                     'type': 'non-leaf node',
@@ -840,7 +840,7 @@ class RegressionTree:
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
         # both branches can be split
         elif type(left_set) is not str and type(right_set) is not str:
@@ -873,7 +873,7 @@ class RegressionTree:
                 mother_node.set_left(left_child_node)
                 mother_node.set_right(right_child_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
             else:
                 mother_node_data = {
@@ -908,7 +908,7 @@ class RegressionTree:
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
 
-                return (mother_node, split_info)
+                return mother_node, split_info
 
         # both branches cannot be split
         elif type(left_set) is str and type(right_set) is str:
@@ -922,7 +922,7 @@ class RegressionTree:
                 }
                 self.leaf_node_count += 1
                 leaf_node = TreeNode(leaf_node_data)
-                return (leaf_node, split_info)
+                return leaf_node, split_info
             # split info is not leaf node
             elif split_info['type'] == 'non-leaf node':
                 mother_node_data = {
@@ -956,7 +956,7 @@ class RegressionTree:
                 right_node = TreeNode(right_node_data)
                 mother_node.set_left(left_node)
                 mother_node.set_right(right_node)
-                return (mother_node, split_info)
+                return mother_node, split_info
 
     # calculate gini of all features of dataset to get the split feature info
     # data_set must have data & target
@@ -984,7 +984,7 @@ class RegressionTree:
             col_min = [min(val) for val in list(zip(*dataset))][col_pos]
             col_max = [max(val) for val in list(zip(*dataset))][col_pos]
         # left branch cannot be split but right branch can be split
-        if split_info['value'][0] <= limit and split_info['value'][1] > limit:
+        if split_info['value'][0] <= limit < split_info['value'][1]:
             left_set = 'pure'
             for index in range(len(dataset)):
                 if split_info['<'] == col_max:
@@ -994,7 +994,7 @@ class RegressionTree:
                     if dataset[index][split_info['feature']] > split_info['<']:
                         right_set.append(dataset[index])
         # right branch cannot be split but left branch can be split
-        elif split_info['value'][1] <= limit and split_info['value'][0] > limit:
+        elif split_info['value'][1] <= limit < split_info['value'][0]:
             right_set = 'pure'
             for index in range(len(dataset)):
                 if split_info['<'] == col_min:
@@ -1048,9 +1048,6 @@ class RegressionTree:
         # in a serial data column with proper max & min values
         if col_max > col_min:
             for index in range(len(data_sorted)):
-
-                # if pos==3:
-                #     print('found you!')
 
                 left_count = []
                 right_count = []
