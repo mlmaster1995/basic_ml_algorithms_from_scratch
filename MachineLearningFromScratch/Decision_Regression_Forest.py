@@ -42,9 +42,7 @@ class RandomForest:
 
         # calc error rate
         res = 1 if res_lst.count(1) >= res_lst.count(0) else 0
-
-        # return (error_rate, result_tupile_list)
-        return (res, single_dataset_target)
+        return res, single_dataset_target
 
     def classify_ensemble(self, single_dataset):
         single_dataset = deepcopy(single_dataset)
@@ -57,8 +55,6 @@ class RandomForest:
 
         # calc error rate
         res = 1 if res_lst.count(1) >= res_lst.count(0) else 0
-
-        # return (error_rate, result_tupile_list)
         return res
 
     def score(self, dataset, dataset_target, parallel=False):

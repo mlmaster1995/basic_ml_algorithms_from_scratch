@@ -14,8 +14,9 @@ data_train, data_train_target, data_test, data_test_target = \
 
 # logistic regression test
 # tunning the epoch to converge -> adjust reg_lambda to increase more
-lr_clf = Logistic_Regression(data_train, data_train_target).train(threshold=0.5, reg_lambda=0.1, stp=0.1, max_epoch=100, plot=False)
-acc = lr_clf.evaluate(data_test, data_test_target, threshold=0.5)
+lr_clf = Logistic_Regression(data_train, data_train_target)
+lr_clf.train(threshold=0.5, reg_lambda=0.1, stp=0.1, max_epoch=100, plot=False)
+acc = lr_clf.score(data_test, data_test_target, threshold=0.5)
 print(f'test acc: {acc * 100}%')
 
 # scikit learn logistic regression

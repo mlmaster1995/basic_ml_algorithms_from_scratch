@@ -14,7 +14,7 @@ normalize_dataset = dp.normalize_data(data_rf)
 data_train, data_train_target, data_test, data_test_target = \
     dp.split_train_test_data(normalize_dataset, data_rf_target, split_ratio=0.8, seed=common)
 
-evaluation = NaiveBays(data_train, data_train_target).evaluate(data_test, data_test_target)
+evaluation = NaiveBays(data_train, data_train_target).score(data_test, data_test_target)
 print(f'NaiveBays acc: {round(evaluation * 100, 5)}%')
 
 # Sklearn Naive Bays

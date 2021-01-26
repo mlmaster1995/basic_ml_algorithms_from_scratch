@@ -2,14 +2,16 @@
 import math
 import time
 import multiprocessing as mp
+from copy import deepcopy
 
 
 class KNN:
     def __init__(self, dataset, dataset_target):
-        self.knn_dataset = dataset
-        self.knn_dataset_target = dataset_target
+        self.knn_dataset = deepcopy(dataset)
+        self.knn_dataset_target = deepcopy(dataset_target)
         self.__distance_list = []
         self.__standardize_distance = []
+        self.opt_K = None
 
     def __clear_lst(self):
         self.__distance_list = []
@@ -101,6 +103,42 @@ class KNN:
 
         return class_key
 
+    # for ensemble learning
+    def classify_ensemble(self, single_dataset):
+        if self.opt_K is not None:
+            K = self.opt_K
+        else:
+            raise NotImplementedError('Call KNN.optimize_K to get opt K first before ensemble learning...')
+        single_dataset = deepcopy(single_dataset)
+
+        # clear out all the distance list
+        self.__clear_lst()
+
+        # fill out the distance list with respect to the single_dataset and standardize the distance
+        self.__calc_distance_recursion(single_dataset, index=0)
+        self.__normalize_distance()
+
+        # make tuple list of (distance, target_class)
+        distance_tuple_lst = [(self.__standardize_distance[index], self.knn_dataset_target[index]) for index in
+                              range(len(self.knn_dataset_target))]
+        sorted_distance_tuple_lst = sorted(distance_tuple_lst, key=lambda x: x[0])
+
+        # count class number
+        if (len(self.knn_dataset) - 1) >= K > 0:
+            target_count = {}
+            for tuple_pair in sorted_distance_tuple_lst[:K]:
+                if tuple_pair[1] not in target_count:
+                    target_count[tuple_pair[1]] = 1
+                else:
+                    target_count[tuple_pair[1]] += 1
+        else:
+            raise NotImplementedError('Improper K value')
+
+        # output the class
+        class_key = sorted(target_count, key=lambda x: target_count[x], reverse=True)[0]
+
+        return class_key
+
     # evaulate a dataset and parallel computing is implemented
     def evaulate(self, data_test, data_test_target, K, recursion=False, parallel=True):
         if parallel:
@@ -128,6 +166,7 @@ class KNN:
         pool.close()
 
         optimum_K = sorted(score_list, key=lambda x: x[0], reverse=True)[0]
+        self.opt_K = optimum_K[1]
         if showtime:
             print(f'process time: {round(time.time() - startime, 5)} sec')
 

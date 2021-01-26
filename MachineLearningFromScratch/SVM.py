@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 
 
-# gaussian & polynomial kernel SVM_Linear
+# gaussian & polynomial kernel SVM
 class SVM_Kernel:
     def __init__(self, dataset, dataset_target, kernel=None):
         # dataet parameters
@@ -34,7 +34,7 @@ class SVM_Kernel:
                 continue
         return dataset_target
 
-    # generate random weight w0,w1,w2,w3.....
+    ## generate random weight w0,w1,w2,w3.....
     def generate_weight(self, num_attr, seed=2):
         random.seed(seed)
         wt_array = []
@@ -55,12 +55,12 @@ class SVM_Kernel:
         prob = np.exp(-(np.linalg.norm(abs(x_ipt - lama_single))) ** 2 / (2 * sigma ** 2))
         return prob
 
-    # polynomial_kernel func
+    ## polynomial_kernel func
     def __poly_kernel(self, x_ipt, lama_single, degree=2, bias=0):
         poly_val = (np.dot(x_ipt, lama_single) + bias) ** degree
         return poly_val
 
-    # generate poly features
+    ## generate poly features
     def __poly_feature_make(self, dt_train, lama, degree=2, bias=0):
         feature = []
         for val in dt_train:
@@ -68,7 +68,7 @@ class SVM_Kernel:
             feature[-1].insert(0, 1)
         return feature
 
-    # train SVM_Linear model
+    # train SVM model
     def train(self, C=1, sigma=0.5, degree=2, bias=0, stp=1, epoch_limit=1000, stp_limit=1e-300, stp_show=True,
               plot=False):
         epoch = 0
@@ -125,7 +125,7 @@ class SVM_Kernel:
             plt.grid()
             plt.show()
 
-    # test SVM_Linear model
+    # test SVM model
     def score(self, dataset, dataset_target):
         dataset_target = self.__process_dataset_target(deepcopy(dataset_target))
 
@@ -158,7 +158,7 @@ class SVM_Kernel:
         return 1 if r >= 0 else 0
 
 
-# linear SVM_Linear
+# linear SVM
 class SVM_Linear:
     def __init__(self, dataset, dataset_target):
         # dataet parameters
@@ -195,7 +195,7 @@ class SVM_Linear:
             wt_array.append(random.uniform(self.wrt_range[0], self.wrt_range[1]))
         return np.array(wt_array)
 
-    # train SVM_Linear model
+    # train SVM model
     def train(self, C=1, stp=1, epoch_limit=1000, stp_limit=1e-100, stp_show=True, plot=False):
         epoch = 0
         hinge_loss_all = 0
@@ -240,7 +240,7 @@ class SVM_Linear:
             plt.grid()
             plt.show()
 
-    # test SVM_Linear model
+    # test SVM model
     def score(self, dataset, dataset_target):
         dataset_target = self.__process_dataset_target(deepcopy(dataset_target))
         dataset = self.__process_dataset(deepcopy(dataset))

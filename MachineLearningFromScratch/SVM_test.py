@@ -9,7 +9,7 @@ data_rf = data_raw.iloc[:, 0:-1].values.tolist()
 data_rf_target = data_raw.iloc[:, -1].values.tolist()
 data_rf = dp.normalize_data(data_rf)
 data_train, data_train_target, data_test, data_test_target = dp.split_train_test_data(data_rf, data_rf_target, 0.7,
-                                                                                      seed=2)
+                                                                     seed=2)
 
 # gaussian kernel
 svm_gaussian = SVM_Kernel(data_train, data_train_target, 'gaussian')

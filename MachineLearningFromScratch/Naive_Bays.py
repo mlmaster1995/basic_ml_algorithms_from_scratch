@@ -54,14 +54,16 @@ class NaiveBays:
 
     # merge both data and target into a new dataset for probability calculation
     def __merge_dataset(self, dataset, dataset_target):
+        mid_dataset = deepcopy(dataset)
+        mid_dataset_target = deepcopy(dataset_target)
         new_dataset = []
-        for item in zip(dataset, dataset_target):
+        for item in zip(mid_dataset, mid_dataset_target):
             item[0].append(item[1])
             new_dataset.append(item[0])
         return new_dataset
 
     # P((x1...xn)|target) = P(x1|target) * P(x2|target)*....P(xn|target)
-    def __calc_liklihood(self, single_data_set, feature_stats_dic):
+    def __calc_likelihood(self, single_data_set, feature_stats_dic):
         prob_likelihood_evidence = {}
         for single_class in feature_stats_dic.keys():
             prob = 1
@@ -74,7 +76,8 @@ class NaiveBays:
         return prob_likelihood_evidence
 
     def classify(self, single_data, verbose=False):
-        likelihood = self.__calc_liklihood(single_data, self.feature_stats_dic)
+        single_data = deepcopy(single_data)
+        likelihood = self.__calc_likelihood(single_data, self.feature_stats_dic)
         if verbose:
             print('P((x1...xn)|target):')
             printdict(likelihood)
@@ -93,7 +96,7 @@ class NaiveBays:
         return res_class
 
     # datatest evaluate
-    def evaluate(self, data_test, data_test_target):
+    def score(self, data_test, data_test_target):
         new_dataset_test = self.__merge_dataset(data_test, data_test_target)
         res_class_lst = []
         for index in range(len(new_dataset_test)):
@@ -101,3 +104,14 @@ class NaiveBays:
         res_class_lst = [1 if pair[1] is pair[0] else 0 for pair in res_class_lst]
         score = 1 - (res_class_lst.count(0) / len(res_class_lst))
         return score
+
+    def classify_ensemble(self, single_data):
+        single_data = deepcopy(single_data)
+        prob_likelihood_evidence = self.__calc_likelihood(single_data, self.feature_stats_dic)
+        # calc the final probability
+        res_prob = {}
+        for key in prob_likelihood_evidence.keys():
+            res_prob[key] = prob_likelihood_evidence[key] * self.prior[key]
+
+        res_class = sorted(res_prob, key=lambda x: res_prob[x], reverse=True)[0]
+        return res_class

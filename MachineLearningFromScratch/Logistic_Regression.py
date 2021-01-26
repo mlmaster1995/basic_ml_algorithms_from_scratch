@@ -4,13 +4,14 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import time
+from copy import deepcopy
 
 
 class Logistic_Regression:
     def __init__(self, dataset, dataset_target):
         # dataset storage
-        self.__dataset = dataset
-        self.__dataset_target = dataset_target
+        self.__dataset = deepcopy(dataset)
+        self.__dataset_target = deepcopy(dataset_target)
         self.training_time = None
 
         # params for initial weight
@@ -23,6 +24,7 @@ class Logistic_Regression:
         self.converted_epoch = None
         self.__epoch_plt = []
         self.__cost_plt = []
+        self.threshold = 0.5
 
         # bias
         self.model_bias = None
@@ -55,7 +57,6 @@ class Logistic_Regression:
     def __weight_update(self, h_x_arr, y_arr, x_arr, stp, reg_lambda, threshold):
         er = 0
         for val in list(zip(h_x_arr, y_arr, x_arr)):
-
             if round(val[0], 8) >= threshold and val[1] == 1:
                 continue
             elif round(val[0], 8) < threshold and val[1] == 0:
@@ -83,6 +84,7 @@ class Logistic_Regression:
         startime = time.time()
         self.initial_weight = np.array(self.__generate_weight())
         self.trained_weight = self.initial_weight.copy()
+        self.threshold = threshold
 
         ep = 0
         # train the model
@@ -129,5 +131,8 @@ class Logistic_Regression:
         error = self.__calc_error_rate(self.trained_weight, datatest, datatest_target, threshold)
         return 1 - error
 
-    def classify(self):
-        pass
+    def classify_ensemble(self, single_dataset):
+        single_dataset = deepcopy(single_dataset)
+        h_x = self.__sigmoid_sgv(np.dot(self.trained_weight, np.array(single_dataset)))
+        res = 1 if h_x >= self.threshold else 0
+        return res
