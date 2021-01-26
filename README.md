@@ -26,4 +26,4 @@ The project is developed by PyCharm IDE and the Supervised_ML_Algorithm_From_Scr
 the IDE project folder. Remaining python files are read to use. 
 
 ## Contact
-* K. Yang: kyang3@lakeheadu.ca
+* C.Young: kyang3@lakeheadu.ca
